@@ -1,8 +1,8 @@
 import socket
 import pickle
 
-HOST = "172.29.83.101"  # Standard loopback interface address (localhost)
-PORT = 65444  # Port to listen on (non-privileged ports are > 1023)
+HOST = "" 
+PORT = 65452  # Port to listen on (non-privileged ports are > 1023)
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
@@ -25,3 +25,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # game_state = {'position': [x, y], 'health': health, 'score': score}
             # game_state_data = pickle.dumps(game_state)
             # client_socket.sendall(game_state_data)
+

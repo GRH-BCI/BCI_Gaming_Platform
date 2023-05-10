@@ -2,8 +2,8 @@ import socket
 import pickle
 from pynput import keyboard
 
-HOST = "172.29.83.101"  # The server's hostname or IP address
-PORT = 65444  # The port used by the server
+HOST = "172.29.82.62"  # The server's hostname or IP address
+PORT = 5001  # The port used by the server
 
 key_name = None
 
@@ -11,12 +11,10 @@ def on_press(key):
     global key_name
     try:
         key_name = key.char
-        print('alphanumeric key {0} pressed'.format(
-            key.char))
+        print('alphanumeric key {0} pressed'.format(key.char))
     except AttributeError:
         key_name = key.name
-        print('special key {0} pressed'.format(
-            key))
+        print('special key {0} pressed'.format(key))
 
 def on_release(key):
     print('{0} released'.format(
