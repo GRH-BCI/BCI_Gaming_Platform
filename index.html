@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GRH BCI Gaming Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://unpkg.com/@daily-co/daily-js"></script>
+  <link rel="stylesheet" href="./index.css" />
+  <script src="./index.js"></script>
+</head>
+<body onload="createCallframe()">
+<header class="header">
+  <div class="left-header">
+    <img
+            src="assets/bci_logo.png"
+            class="bci-logo"
+            alt="BCI logo reads Daily"
+    />
+  </div>
+  <div class="right-header">
+    <strong>
+      <p class="header-title">GRH BCI</p>
+    </strong>
+  </div>
+</header>
+<div class="container">
+  <div id="wrapper" class="wrapper">
+    <div id="start-container" class="start-container">
+      <h1 class="title">GRH BCI Gaming Platform</h1>
+      <p class="prompt"></p>
+      <button
+              id="show-list-rooms"
+              class="button start-button"
+              onclick="populateGroupList()"
+      >
+        Show List of Rooms
+      </button>
+      <p class="prompt"></p>
+      <ul id="groupList">
+        <!-- List items will be dynamically added here -->
+      </ul>
+    </div>
+    <div id="quit_section">
+      <button id="return_btn" onclick="clickReturn()" class="button start-button">
+        return
+      </button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
