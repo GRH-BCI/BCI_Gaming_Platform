@@ -1,11 +1,17 @@
-# BCI_Gaming_Platform
-This is a repo for the BCI enabled multi player gaming platform.
+# GRH-Home-BCI-Project
 
-# Contribution
-Contribution will be done primarily through checking out branches for work, followed by pull requests to migrate approved work to the Main branch. 
 
-# Branch Naming Convention
-Please indicate which part of the system you are working on as the first word in your branch name. For instance, when working on the python response back end, indicate so by using "python/<mybranch_name>".
+This directory includes the files required to build GRH-Home-BCI application. 
 
-# Requirements 
-Please make sure you create a requirements or environment file that includes all the required libraries and modules. 
+This app pairs the outputs from Emotiv BCI software to keypresses on keyboard. in order to use this app:
+
+1- you will need to install the dependencies listed in requirements.txt file.
+
+pip3 install -r requirements.txt
+
+
+2- you will need to aquire a unique "Client ID" and "Client Secret" from Emotiv Cortex websit which will be tied to your Emotiv Cortex account and credentials. 
+
+3- after entering your client id and secret in the required fields in main.py . you can build the model. pyinstaller is recommended
+
+This application is primarily used by Glenrose Rehabilitation Hospital for its Home-BCI program 
