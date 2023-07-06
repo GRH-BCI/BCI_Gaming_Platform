@@ -7,7 +7,8 @@
 
 //callFrame that holds the meeting object
 //currentURL is the current session url
-let callFrame, currentURL;
+let callFrame, currentURL, shareOn, currentRoom;
+let showRoomsAllowed = true;
 //Rooms to select from, to be displayed in the ul
 const data = [
     { name: 'Room 1', url: 'https://grhbcitest.daily.co/test1', room: 'test1' },
@@ -19,30 +20,47 @@ const data = [
 const { ipcRenderer } = window.electron;
 // updates the participant count in each room every time interval
 window.setInterval('updateParticipantCount()', 2000);
+window.setInterval('refreshShowRoomsAllowed()', 5000)
 
+document.addEventListener("DOMContentLoaded", function() {
+    const checkbox = document.getElementById('ctrl_share_toggle')
 
-//updates the list item participant count by calling the getMeetingParticipantCount(room) function
-async function updateParticipantCount(){
+    checkbox.addEventListener("change", function (event) {
+        // Code to be executed when the checkbox state changes
+        const statusDisplay = document.getElementById('ctrl_share_status')
+        if (event.target.checked) {
+            statusDisplay.innerHTML = "control sharing: " + "on";
+            shareControl(currentURL)
+        } else {
+            statusDisplay.innerHTML = "control sharing: " + "off";
+            endShareControl(currentURL)
+        }
+    })
+});
+async function updateParticipantCount() {
     let index = 0;
-    //find the grouplist element in html
-    let list = document.getElementById('groupList'),
-        items = list.childNodes;
+    // Find the groupList element in the HTML
+    let list = document.getElementById('groupList');
+    let items = list.childNodes;
 
-    //for each list item, retrieve the participant count and update li innerHtml accordingly
-    for (let i = 0, length = items.length; i < length; i++)
-    {
+    // For each list item, retrieve the participant count and update li innerHTML accordingly
+    for (let i = 0, length = items.length; i < length; i++) {
         if (items[i].nodeType !== 1) {
             continue;
         }
-        //retrieve participant count
+        // Retrieve participant count
         const participantCount = await getMeetingParticipantCount(data[index].room);
-        const countElement = items[i].querySelector('h4')
+
+        // Access the countElement directly by index within childNodes and modify its text content
+        const countElement = document.getElementsByTagName('h4')[index];
         countElement.textContent = 'in-room: ' + participantCount.toString();
-        index ++;
+
+        index++;
     }
 
     window.api.offParticipantCountResponse();
 }
+
 
 //function used to initiate a callFrame instance, which lies within the wrapper.
 //callFrame is able to adjust the UI as user joins and leaves the room
@@ -54,7 +72,7 @@ async function createCallframe() {
     callFrame = window.DailyIframe.createFrame(callWrapper,
         {
             showFullscreenButton: true,
-        }
+      }
     );
 
     callFrame
@@ -66,9 +84,43 @@ async function createCallframe() {
         .on('left-meeting', handleLeftMeeting);
 
     //hide return section and the callFrame when init
-    callFrame.iframe().style.height = '500px';
+    callFrame.iframe().style.height = '80vh';
     callFrame.iframe().style.display = 'none';
     hideQuit()
+}
+
+async function clickScreenShare(){
+    btn = document.getElementById('screen-share-btn')
+    if (shareOn === false){
+        startScreenAndAudioShare()
+        btn.innerHTML = 'Stop Screen Share with Audio'
+        shareOn = true
+    } else{
+        stopScreenAndAudioShare()
+        btn.innerHTML = 'Start Screen Share with Audio'
+        shareOn = false
+    }
+}
+
+function startScreenAndAudioShare(){
+    callFrame.startScreenShare({
+        // track constraints
+        displayMediaOptions: {
+            audio: true,
+            selfBrowserSurface: 'exclude',
+            surfaceSwitching: 'include',
+            video: {
+                width: 1024,
+                height: 768,
+            },
+        },
+        // video send settings
+        screenVideoSendSettings: 'motion-and-detail-balanced',
+    });
+}
+
+function stopScreenAndAudioShare(){
+    callFrame.stopScreenShare()
 }
 
 //joinCall enters a room using the url
@@ -90,6 +142,19 @@ async function joinCall(url) {
         toggleError();
         console.error(e);
     }
+}
+
+function clickShowRooms(){
+    if (showRoomsAllowed) {
+        const btn = document.getElementById('show-list-rooms')
+        btn.innerHTML = "Refresh List of Rooms"
+        populateGroupList();
+        showRoomsAllowed = false;
+    }
+}
+
+function refreshShowRoomsAllowed() {
+    showRoomsAllowed = true
 }
 
 //create list items for ul using the data global variable, fills in the room, name and url and join room button
@@ -153,24 +218,38 @@ async function clickJoinRoom(index){
     const urlElement = tempElement.querySelector('p');
     const itemUrl = urlElement.textContent;
 
-    const section = document.getElementById('quit_section')
-    section.style.display = 'block'
 
     //start session
-    await startSession(itemUrl)
+    await startSession(itemUrl);
+
+    const section = document.getElementById('quit_section')
+    section.style.display = 'block'
+    shareOn = false;
+
+    currentRoom = itemUrl;
+    const toggle = document.getElementById('toggle_label')
+    toggle.style.display = "inline-block"
 }
 
 //session will both render the user to join a call and start share control, based on the url parameter
 async function startSession(url){
-    await joinCall(url)
-    await shareControl(url)
+    await joinCall(url);
+    let controlStatus = await shareControl(url);
+
+    const statusDisplay = document.getElementById('ctrl_share_status')
+    statusDisplay.innerHTML = "control sharing: " + controlStatus;
 }
 
 //calls main process on startPythonProcess channel and sets the current session url of user
 async function shareControl(url){
-    // Send a message to the main process
-    ipcRenderer.send('startPythonProcess', url);
-    currentURL = url;
+    return new Promise((resolve) => {
+        // Send a message to the main process
+        ipcRenderer.send('startPythonProcess', url);
+        currentURL = url;
+        window.api.onControlShareResponse((data) => {
+            resolve(data);
+        });
+    });
 }
 
 //click listener for return button, which hides the video section and calls end session with current URL
@@ -178,6 +257,10 @@ function clickReturn(){
     hideQuit()
     callFrame.iframe().style.display = 'none';
     endSession(currentURL);
+    btn = document.getElementById('screen-share-btn')
+    toggle = document.getElementById('toggle_label')
+    btn.innerHTML = 'Start Audio Screen Share'
+    toggle.style.display = 'none'
 }
 
 //leaves the meeting and end control sharing based on the current session url
@@ -197,8 +280,14 @@ async function leaveMeeting(){
 
 //calls main process on endPythonProcess channel to end session for url
 async function endShareControl(url){
-    // Send a message to the main process
-    ipcRenderer.send('endPythonProcess', url);
+    return new Promise((resolve) => {
+        // Send a message to the main process
+        ipcRenderer.send('endPythonProcess', url);
+
+        window.api.onControlShareResponse((data) => {
+            resolve(data);
+        });
+    });
 }
 
 

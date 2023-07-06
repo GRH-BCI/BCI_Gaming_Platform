@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>GRH BCI Gaming Platform</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,8 +17,15 @@
     />
   </div>
   <div class="right-header">
-    <strong>
-      <p class="header-title">GRH BCI</p>
+    <p id="ctrl_share_status">
+      control sharing: off
+    </p>
+    <label class="switch" id="toggle_label">
+      <input type="checkbox" id="ctrl_share_toggle">
+      <span class="slider round"></span>
+    </label>
+    <strong class="header-title">
+      GRH BCI
     </strong>
   </div>
 </header>
@@ -30,18 +37,24 @@
       <button
               id="show-list-rooms"
               class="button start-button"
-              onclick="populateGroupList()"
+              onclick="clickShowRooms()"
       >
         Show List of Rooms
       </button>
       <p class="prompt"></p>
       <ul id="groupList">
-        <!-- List items will be dynamically added here -->
       </ul>
     </div>
     <div id="quit_section">
       <button id="return_btn" onclick="clickReturn()" class="button start-button">
         return
+      </button>
+      <button
+              id="screen-share-btn"
+              class="button start-button"
+              onclick="clickScreenShare()"
+      >
+        Start Screen Share with Audio
       </button>
     </div>
   </div>
