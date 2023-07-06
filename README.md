@@ -1,6 +1,6 @@
 # BCI Gaming Platform
 
-BCI Gaming Platform enables multiplaye ronline gaming using BCI devices. 
+BCI Gaming Platform enables multiplayer online gaming using BCI devices. 
 
 ## Prerequisites
 
