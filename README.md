@@ -5,7 +5,7 @@ BCI Gaming Platform enables multiplayer online gaming using BCI devices.
 ## Prerequisites
 
 - AWS server: https://docs.google.com/document/d/1S-UzDPUA_8Vvk8CJM3nPtaE7ZhmH2pQwX4Gk4n5sBZY
-- Daily.co: grhbcitest.daily.co
+- Daily.co: https://grhbcitest.daily.co
 
 ## How the app works
 
