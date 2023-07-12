@@ -61,7 +61,7 @@ async function getParticipantCount(roomName) {
 //ipcMain handlers
 //spawn python process using url
 ipcMain.on('startPythonProcess', (event, url) => {
-    controlSession = execFile('python3', ['./python/share.py', url]);
+    controlSession = spawn("./python/dist/share.exe", [url]);
     controlSession.stdout.on('data', (data) => {
         const message = data.toString(); // Convert the error data to string
         console.log(message)
