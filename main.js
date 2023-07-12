@@ -9,9 +9,10 @@
 const { app, BrowserWindow, ipcMain, desktopCapturer} = require("electron");
 const path = require("path")
 //managing python threads
-const { spawn, execFile , fork} = require('child_process');
+const { spawn, execFile , fork, execSync} = require('child_process');
 //making http requests
 const axios = require('axios')
+const psTree = require('ps-tree');
 
 //TO DO: change api key to daily.co's api key
 const apiKey = '1a1f99bcddc9683e98ad57f556b127d222fc54b4ffa415a0205ed05e785ffc97';
@@ -21,6 +22,7 @@ const apiKey = '1a1f99bcddc9683e98ad57f556b127d222fc54b4ffa415a0205ed05e785ffc97
 //controlSession, used to hold the python process upon creation
 let controlSession;
 let win;
+let controlSessionList = [];
 let errorFlag = false;
 let controlSessionOn = false;
 
@@ -58,10 +60,35 @@ async function getParticipantCount(roomName) {
     }
 }
 
+function getSubprocesses(pid, callback) {
+    psTree(pid, (err, children) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        const subprocesses = children.map(child => ({
+            pid: child.PID,
+            command: child.COMMAND,
+        }));
+
+        callback(subprocesses);
+    });
+}
+
 //ipcMain handlers
 //spawn python process using url
 ipcMain.on('startPythonProcess', (event, url) => {
     controlSession = spawn("./python/dist/share.exe", [url]);
+    electronPid = process.pid;
+    getSubprocesses(electronPid, processTree  => {
+        for (const subprocess of processTree) {
+            console.log(`PID: ${subprocess.pid}, Command: ${subprocess.command}`);
+            if (subprocess.command === "share.exe"){
+                controlSessionList.push(subprocess.pid);
+            }
+        }
+    });
     controlSession.stdout.on('data', (data) => {
         const message = data.toString(); // Convert the error data to string
         console.log(message)
@@ -79,8 +106,13 @@ ipcMain.on('startPythonProcess', (event, url) => {
 
 //kill python process that has been created and running
 ipcMain.on('endPythonProcess', (event) => {
+    console.log(controlSessionList)
     if (controlSession !== undefined && controlSession !== null) {
-        controlSession.kill();
+        controlSessionList.forEach(pid => {
+            cmd = "taskkill /PID " + pid + " /F";
+            execSync(cmd);
+            controlSessionList = []
+        })
     }
     event.reply('controlSessionEnded', 'off')
 });
@@ -113,4 +145,14 @@ ipcMain.on('getParticipantCount', (event, roomName) => {
 app.whenReady().then(() => {
   createWindow();
 });
+
+app.on('before-quit', () => {
+    if (controlSession !== undefined && controlSession !== null) {
+        controlSessionList.forEach(pid => {
+            console.log(pid)
+            cmd = "taskkill /PID " + pid + " /F";
+            execSync(cmd);
+        })
+    }
+})
 
