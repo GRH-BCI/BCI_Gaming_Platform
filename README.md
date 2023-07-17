@@ -9,7 +9,7 @@ BCI Gaming Platform enables multiplayer online gaming using BCI devices.
 
 ## How the app works
 
-This demo hosts game sessions that allow online control, video and audio sharing. Electron.js along with Daily API are used for client-side video and audio sharing. Python clien-server TCP socket architecture is used for control sharing. 
+This demo hosts game sessions that allow online control, video and audio sharing. Electron.js along with Daily API are used for client-side video and audio sharing. Python client-server TCP socket architecture is used for control sharing. 
 
 ## Running locally
 
