@@ -25,7 +25,12 @@ class ClientThread(threading.Thread):
                     break
 
                 # Unpickle the received data
-                input_data = pickle.loads(data)
+                try:
+                    input_data = pickle.loads(data)
+                except Exception as e:
+                    print('Error occured when loading keys')
+                    continue
+
                 print(f"Input data received from {self.addr}, which is for URL: {self.url}")
 
                 # Broadcast the input data to all clients with the same URL
@@ -63,6 +68,12 @@ class ClientThread(threading.Thread):
         reset_signal = 1314
         self.send_input_data(reset_signal)
 
+    def cleanup(self):
+        try:
+            self.conn.close()
+        except:
+            pass
+
 
 client_threads = []
 lock = threading.Lock()
@@ -89,7 +100,15 @@ def main():
                     continue
 
                 # Unpickle the URL data
-                url = pickle.loads(url_data)
+                try:
+                    url = pickle.loads(url_data)
+                    if 'grhbcitest' not in url:
+                        conn.close()
+                        continue
+                except Exception as e:
+                    print('Exception occured when initial pickling url')
+                    continue
+
                 print(f"URL received from {addr}: {url}")
 
                 # Start a new thread to handle the client connection
@@ -106,6 +125,8 @@ def main():
             lock.acquire()
             for client_thread in client_threads:
                 client_thread.send_reset_data()
+                client_thread.cleanup()
+            client_threads = []
             lock.release()
 
             print('server restarting')
