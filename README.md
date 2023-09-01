@@ -11,22 +11,22 @@ This app hosts game sessions that allow online control, video and audio sharing.
 ## How the app works
 BCI Gaming Platform is a great way to connect to your peers to play BCI games together! You could choose to play player versus player games against each other or cooperate with each other to perform complex character movements in game.
 
-Here is the home screen upon starting the BCI gaming platform application:
+Here is the **home screen** upon starting the BCI gaming platform application:
 
 1. This is the status of your control sharing, if it is turned on, any keys you press will be sent to all the participants in the room, so be careful what you are typing when it is on!
 2. This is a refresh button that allows you to refresh the list of rooms every 5 seconds.
 3. This is the status of the room in terms of the number of participants currently in the room.
 4. This is the button to enter the room, which will take you to the in-room screen and you can start sharing your game from there!
 
-Once you are in the room, you can either choose to be a game host or a participant. 
+Once you are **in the room**, you can either choose to be a game host or a participant. 
 
-If you would like to be the host:
+If you would like to be the **host**:
 Start any game you would like to play with your peer
 Press start screen share with audio
 Minimize the gaming platform app and full screen your game
 Start playing once your peer has joined
 
-If you would like to be the participant:
+If you would like to be the **participant**:
 Make sure your control sharing is on
 Click on the expand button to see the game in full screen
 Starting sending your controls and game with your peer
