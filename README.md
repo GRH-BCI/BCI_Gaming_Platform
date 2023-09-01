@@ -18,6 +18,9 @@ Here is the **home screen** upon starting the BCI gaming platform application:
 3. This is the status of the room in terms of the number of participants currently in the room.
 4. This is the button to enter the room, which will take you to the in-room screen and you can start sharing your game from there!
 
+![Image Alt Text](https://https://github.com/GRH-BCI/BCI_Gaming_Platform/raw/main/assets/sc1-bci.png)
+
+
 Once you are **in the room**, you can either choose to be a game host or a participant. 
 
 If you would like to be the **host**:
