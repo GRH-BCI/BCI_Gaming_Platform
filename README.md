@@ -49,6 +49,9 @@ And here is a list of components in the in-room screen:
 8. This is the screen share button to share the video of the game only. It is a deprecated button to use since no one else in the room can hear the sound of the game.
 9. This is the full screen button. It is recommended to use it as a participant to get more immersive gaming experience.
 
+![Image Alt Text](https://github.com/GRH-BCI/BCI_Gaming_Platform/blob/main/assets/sc2-bci.png)
+
+
 ## Running locally
 In the terminal of the folder:
 1. Install dependencies `npm install`
