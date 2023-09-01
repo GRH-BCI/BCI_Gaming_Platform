@@ -47,11 +47,12 @@ And here is a list of components in the in-room screen:
 9. This is the full screen button. It is recommended to use it as a participant to get more immersive gaming experience.
 
 ## Running locally
-
+In the terminal of the folder:
 1. Install dependencies `npm install`
 2. Run `npm start`
 
 ## Building locally
+In the terminal of the folder:
 1. Install dependencies `npm install`
 2. Run `npm run build` , check dist folder for packaged executable files
 
