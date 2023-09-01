@@ -18,5 +18,5 @@ This demo hosts game sessions that allow online control, video and audio sharing
 
 ## Building locally
 1. Install dependencies `npm install`
-2. Run 'npm run build', check dist folder for packaged executable files
+2. Run `npm run build`, check dist folder for packaged executable files
 
