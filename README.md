@@ -5,6 +5,7 @@ This app hosts game sessions that allow online control, video and audio sharing.
 
 ## Prerequisites
 
+- Node.js
 - AWS server: https://docs.google.com/document/d/1S-UzDPUA_8Vvk8CJM3nPtaE7ZhmH2pQwX4Gk4n5sBZY
 - Daily.co: https://grhbcitest.daily.co
 
