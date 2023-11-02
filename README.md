@@ -65,4 +65,5 @@ In the terminal of the folder:
 ## Tips on building
 1. Use `pyinstaller --onefile share.py` after modifying the client python file to compile it into single executable, which should be copied to the main directory for the electron app to access
 2. After downloading the project, there should be no spaces in the directory name, otherwise the app is unable to find its correct directory path to function properly
+3. Ensure npm is updated to the lastest version before running `npm install`
 
