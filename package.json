@@ -12,11 +12,11 @@
   },
   "build": {
     "appId": "grh_bci_gaming_platform",
-    "asarUnpack" : [
+    "asarUnpack": [
       "share.exe"
     ],
     "win": {
-      "icon" : "./assets/android-chrome-512x512.ico"
+      "icon": "./assets/android-chrome-512x512.ico"
     }
   },
   "author": "Alex Liu",
