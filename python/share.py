@@ -17,8 +17,8 @@ HOST = "35.182.207.173"
 # HOST = "127.0.0.1"
 PORT = 8080
 
-# url = sys.argv[1]  # passed in from the main process
-url = 'grhbcitest'
+url = sys.argv[1]  # passed in from the main process
+# url = 'grhbcitest'
 
 # Virtual key codes for WASD
 VK_W = 0x57
