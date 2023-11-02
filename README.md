@@ -62,7 +62,7 @@ In the terminal of the folder:
 In the terminal of the folder:
 1. Install dependencies `npm install`
 2. Run `npm run build` , check dist folder for packaged executable files
-# Tips on building
+## Tips on building
 1. Use `pyinstaller --onefile share.py` after modifying the client python file to compile it into single executable, which should be copied to the main directory for the electron app to access
 2. After downloading the project, there should be no spaces in the directory name, otherwise the app is unable to find its correct directory path to function properly
 
