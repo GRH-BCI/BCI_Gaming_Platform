@@ -2,16 +2,19 @@ import socket
 import threading
 import pickle
 import time
+import string
 
 HOST = "0.0.0.0"  # Listen on all network interfaces
 PORT = 8080
+url_code = 'grhbcitest'
 
 class ClientThread(threading.Thread):
-    def __init__(self, conn, addr, url):
+    def __init__(self, conn, addr, url, token):
         threading.Thread.__init__(self)
         self.conn = conn
         self.addr = addr
         self.url = url
+        self.token = token
         print(f"New connection from {addr} for URL: {url}")
 
     def run(self):
@@ -36,19 +39,16 @@ class ClientThread(threading.Thread):
                 # Broadcast the input data to all clients with the same URL
                 lock.acquire()
                 for client_thread in client_threads:
-                    print(client_thread.addr[0], self.addr[0])
-                    if client_thread.url == self.url and client_thread.addr[0] != self.addr[0]:
-                        print(client_thread.addr[0], self.addr[0], ' sent')
+                    print(client_thread.token, self.token)
+                    if client_thread.url == self.url and client_thread.token != self.token:
+                        print(client_thread.token, self.token, ' sent')
                         client_thread.send_input_data(input_data)
                 lock.release()
-            except ConnectionResetError:
-                print(f"Connection from {self.addr} closed for URL: {self.url}")
+            except Exception as e:
+                print(f"Connection from {self.addr} with {self.token} closed for URL: {self.url}")
                 self.remove_from_client_threads()
                 break
-            except (socket.error, socket.timeout) as e:
-                print(f"Socket error occurred: {str(e)}")
-                self.remove_from_client_threads()
-                break
+
 
     def send_input_data(self, input_data):
         # Pickle the input data
@@ -94,25 +94,33 @@ def main():
                 conn, addr = s.accept()
 
                 # Receive the URL from the client
-                url_data = conn.recv(1024)
-                if not url_data:
+                init_info = conn.recv(1024)
+                if not init_info:
                     print(f"Connection from {addr} closed without URL")
                     continue
 
                 # Unpickle the URL data
                 try:
-                    url = pickle.loads(url_data)
-                    if 'grhbcitest' not in url:
+                    init_info_unpickled = pickle.loads(init_info)
+                except Exception as e:
+                    print('Exception occured when pickling initial info')
+                    continue
+
+                try:
+                    print(init_info_unpickled)
+                    url = init_info_unpickled.split(",")[0]
+                    token = init_info_unpickled.split(",")[1]
+                    if url_code not in url:
                         conn.close()
                         continue
                 except Exception as e:
-                    print('Exception occured when initial pickling url')
+                    print(f'Exception occured when splitting initial info : {str(e)}')
                     continue
 
-                print(f"URL received from {addr}: {url}")
+                print(f"URL received from {addr}: {url}, with token {token}")
 
                 # Start a new thread to handle the client connection
-                client_thread = ClientThread(conn, addr, url)
+                client_thread = ClientThread(conn, addr, url, token)
                 client_thread.start()
 
                 # Add the client thread to the list

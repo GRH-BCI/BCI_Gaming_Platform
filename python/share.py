@@ -10,13 +10,15 @@ import ctypes
 import win32api
 import win32con
 import time
+import string
+import random
 
 HOST = "35.182.207.173"
 # HOST = "127.0.0.1"
 PORT = 8080
 
-url = sys.argv[1]  # passed in from the main process
-# url = 'tuw'
+# url = sys.argv[1]  # passed in from the main process
+url = 'grhbcitest'
 
 # Virtual key codes for WASD
 VK_W = 0x57
@@ -150,8 +152,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print("Failed to connect to the server", file=sys.stderr)
         sys.exit(1)
     sys.stdout.flush()
-    url_data = pickle.dumps(url)
-    s.sendall(url_data)
+
+    t = t = time.localtime()
+    time_encoded = time.strftime("%H:%M:%S", t)
+    str_encoded = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+    token = time_encoded + str_encoded
+    init_info = url + ',' + token
+    print(init_info)
+    init_info_pickled = pickle.dumps(init_info)
+    s.sendall(init_info_pickled)
 
     send_thread = threading.Thread(target=send_data, args=(s, url, lock))
     receive_thread = threading.Thread(target=receive_data, args=(s, lock))
