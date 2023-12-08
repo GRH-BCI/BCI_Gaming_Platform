@@ -13,12 +13,12 @@ import time
 import string
 import random
 
-HOST = "35.182.207.173"
+HOST = "3.99.162.25"
 # HOST = "127.0.0.1"
 PORT = 8080
 
 url = sys.argv[1]  # passed in from the main process
-# url = 'grhbcitest'
+# url = 'https://grhbcitest.daily.co/test1'
 
 # Virtual key codes for WASD
 VK_W = 0x57
